@@ -15,7 +15,8 @@ var config = {
   options: {
       database: 'hotel_management',
       encrypt: true,
-      port: 1401
+      port: 1401,
+      rowCollectionOnRequestCompletion: true
   }
 };
 function getConnection () {

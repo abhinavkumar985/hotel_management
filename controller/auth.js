@@ -2,21 +2,29 @@ const getConnection = require('../connection');
 var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
 function authUser(user, password, callback){
-    console.log(user,password);
-    let sql_stmt = 'select position from employee where email = @User and password = @Password;';
+    let sql_stmt = 'select position,name from employee where email = @User and password = @Password;';
     getConnection().then(function(connection) {
         request = new Request(
             sql_stmt,
-            function(err, rows) {
+            function(err, Nrow, rows) {
             if (err) {
+                connection.close();
                 callback({status:false, msg: 'Unable to process the reuest at the moment. Please try again later.' ,data: err});
             }
-            if(rows === 0){
+            if(Nrow === 0){
+                connection.close();
                 callback({status:false, msg: 'Invalid username or password.' ,data: []});
             }
-        });
-        request.on('row', function(columns) {
-            callback({status:false, msg: 'Login Successfull' ,data: columns});
+            var rowarray = [];
+            rows.forEach(function(columns){
+                var rowdata = new Object();
+                columns.forEach(function(column) {
+                    rowdata[column.metadata.colName] = column.value;
+                });
+                rowarray.push(rowdata);
+            });
+            connection.close();
+            callback({status:true, msg: 'Login Successfull' ,data: rowarray});
         });
         request.addParameter('User', TYPES.NVarChar, user);
         request.addParameter('Password', TYPES.NVarChar, password);
