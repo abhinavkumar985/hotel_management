@@ -5,6 +5,7 @@
   "main": "connection.js",
   "dependencies": {
     "async": "^3.1.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "tedious": "^6.2.0"
   },

@@ -13,18 +13,21 @@ var config = {
       },
   },
   options: {
-      database: 'clinic',
+      database: 'hotel_management',
       encrypt: true,
       port: 1401
   }
-}
-var connection = new Connection(config);
+};
+function getConnection () {
+  return new Promise((resolve, reject) => {
+    var connection = new Connection(config);
 
+    connection.on('connect', function(err) {
+      if (err) return reject(err);
+      resolve(connection);
+    });
+  });
+}
+module.exports = getConnection;
 // Attempt to connect and execute queries if connection goes through
-connection.on('connect', function(err) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log('Connected');
-  }
-});
+
