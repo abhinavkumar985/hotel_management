@@ -1,5 +1,6 @@
 /* controllers impor*/
 const authUser =  require('./controller/auth');
+const getDashBoardData =  require('./controller/dashboard');
 const cors = require('cors')
 const express = require('express');
 const app = express();
@@ -18,6 +19,7 @@ app.use(session({
     cookie: { secure: true }
 }))
 app.use(bodyParser.json());
+// Login Page Route
 app.post('/login', (req, res) => {
     authUser(req.body.username, req.body.password,(result)=>{
         let user;
@@ -25,15 +27,21 @@ app.post('/login', (req, res) => {
             user  = result.data;
             result.data =user;
             req.session[req.sessionID] = user[0];
-            res.cookie('rememberme', '1', { expires: new Date(Date.now() + 900000), httpOnly: true })
             res.cookie('sessionID',req.sessionID, { expires: new Date(Date.now() + 900000)}).send(result);
             return;
         }
         res.send(result);
     });
 });
-app.get('/hello',(req,res)=>{
-    console.log("Cookies :  ", req.cookies);
-    res.send({});
+app.get('/logout',(req,res)=>{
+    let sessionID = res.cookie('sessionID');
+    delete req.session[sessionID];
+    res.send({status:true,msg:'Logout completed !'});
+});
+// Dashboard Page Route
+app.get('/dashboard',(req,res)=>{
+    getDashBoardData((result)=>{
+        res.send(result);
+    });
 });
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
