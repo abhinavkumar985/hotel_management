@@ -2,7 +2,7 @@ const getConnection = require('../connection');
 var Request = require('tedious').Request;
 var TYPES = require('tedious').TYPES;
 function authUser(user, password, callback){
-    let sql_stmt = 'select position,name from employee where email = @User and password = @Password;';
+    let sql_stmt = 'select position,name,email from employee where email = @User and password = @Password;';
     getConnection().then(function(connection) {
         request = new Request(
             sql_stmt,
