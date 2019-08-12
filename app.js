@@ -1,25 +1,29 @@
 /* controllers impor*/
 const authUser = require('./controller/auth');
 const getDashBoardData = require('./controller/dashboard');
+const getAllGuest = require('./controller/guest');
+
 const cors = require('cors')
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+// const cookieParser = require('cookie-parser');
 var session = require('express-session')
 const port = 3000;
-
-
-app.use(cors());
-app.use(cookieParser());
+var corsOptions = {
+	origin: 'http://localhost:4200', // webpack dev server port
+	credentials:true
+  }
+app.use(bodyParser.json());
+app.use(cors(corsOptions));
 app.use(session({
     secret: 'keyboard cat',
     resave: true,
     saveUninitialized: false,
-    cookie: { secure: true , maxAge : 900000},
     maxAge:900000
-}))
-app.use(bodyParser.json());
+}));
+// app.use(cookieParser());
+
 // Login Page Route
 app.post('/login', (req, res) => {
     authUser(req.body.username, req.body.password, (result) => {
@@ -40,11 +44,16 @@ app.get('/logout', (req, res) => {
 });
 // Dashboard Page Route
 app.get('/dashboard', (req, res) => {
-
     getDashBoardData((result) => {
         res.send(result);
     });
 
+});
+// Guest Route
+app.get('/getAllGuest', (req, res) => {
+    getAllGuest((result) => {
+        res.send(result);
+    });
 });
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
 // middleware
