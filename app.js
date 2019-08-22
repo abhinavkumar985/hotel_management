@@ -1,7 +1,7 @@
 /* controllers impor*/
 const authUser = require('./controller/auth');
 const getDashBoardData = require('./controller/dashboard');
-const getAllGuest = require('./controller/guest');
+const guestModuel = require('./controller/guest');
 
 const cors = require('cors')
 const express = require('express');
@@ -51,7 +51,13 @@ app.get('/dashboard', (req, res) => {
 });
 // Guest Route
 app.get('/getAllGuest', (req, res) => {
-    getAllGuest((result) => {
+    guestModuel.getAllGuest((result) => {
+        res.send(result);
+    });
+});
+app.post('/checkoutGuest', (req, res) => {
+    console.log(req.body.data)
+    guestModuel.checkOutGuest(req.body.data,(result) => {
         res.send(result);
     });
 });
