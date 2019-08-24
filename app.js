@@ -56,7 +56,6 @@ app.get('/getAllGuest', (req, res) => {
     });
 });
 app.post('/checkoutGuest', (req, res) => {
-    console.log(req.body.data)
     guestModuel.checkOutGuest(req.body.data,(result) => {
         res.send(result);
     });
